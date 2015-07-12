@@ -69,9 +69,10 @@ utility::string_t json_value_to_csv_entry(const web::json::value& jsonValue) {
     }
 }
 
-void json_to_goeuro_csv_line(web::json::value& jsonValue,
-                             std::ofstream& os) {
-    web::json::value geo_position;
+void json_to_goeuro_csv_line(web::json::value& jsonValue, std::ofstream& os) {
+    /*
+     * Quite verbose, this should not exist. Either go for generic or more specific.
+     */
     if (!jsonValue.is_object()) {
         return;
     }
@@ -79,7 +80,7 @@ void json_to_goeuro_csv_line(web::json::value& jsonValue,
     os << json_value_to_csv_entry(jsonObject["_id"]) << ",";
     os << json_value_to_csv_entry(jsonObject["name"]) << ",";
     os << json_value_to_csv_entry(jsonObject["type"]) << ",";
-    geo_position = jsonObject["geo_position"];
+    web::json::value geo_position = jsonObject["geo_position"];
     if (geo_position.is_object()) {
         os << json_value_to_csv_entry(geo_position.as_object()["latitude"]) << ",";
         os << json_value_to_csv_entry(geo_position.as_object()["longitude"]);
@@ -90,8 +91,7 @@ void json_to_goeuro_csv_line(web::json::value& jsonValue,
     os << "\n";
 }
 
-void write_json_to_file(const web::json::value& jsonValue,
-                        const std::string& filename) {
+void write_json_to_file(const web::json::value& jsonValue, const std::string& filename) {
     if (jsonValue.is_array()) {
         std::ofstream os(filename, std::ofstream::out);
         if (os.fail()) {
